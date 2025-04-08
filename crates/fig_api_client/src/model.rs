@@ -1074,6 +1074,6 @@ mod tests {
 
         // The conversion should preserve the is_preprocessor field
         assert_eq!(converted.name, "test_tool");
-        assert_eq!(converted.description, "A test tool");
+        assert_eq!(converted.description, Some("A test tool".to_string()));
     }
 }
