@@ -1071,7 +1071,7 @@ mod tests {
         };
 
         let converted: amzn_codewhisperer_streaming_client::types::ToolSpecification = tool_spec.into();
-        
+
         // The conversion should preserve the is_preprocessor field
         assert_eq!(converted.name, "test_tool");
         assert_eq!(converted.description, "A test tool");
