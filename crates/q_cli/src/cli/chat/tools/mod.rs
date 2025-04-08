@@ -215,6 +215,52 @@ pub struct QueuedTool {
 pub struct InputSchema(pub serde_json::Value);
 
 /// The output received from invoking a [Tool].
+
+#[cfg(test)]
+mod tool_spec_tests {
+    use serde_json::json;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_tool_spec_serialization_with_preprocessor() {
+        let tool_spec = ToolSpec {
+            name: "test_tool".to_string(),
+            description: "A test tool".to_string(),
+            input_schema: InputSchema(json!({
+                "type": "object",
+                "properties": {
+                    "test": {
+                        "type": "string"
+                    }
+                }
+            })),
+            is_preprocessor: true,
+        };
+
+        let serialized = serde_json::to_string(&tool_spec).unwrap();
+        let deserialized: ToolSpec = serde_json::from_str(&serialized).unwrap();
+
+        assert_eq!(deserialized.name, "test_tool");
+        assert_eq!(deserialized.description, "A test tool");
+        assert_eq!(deserialized.is_preprocessor, true);
+    }
+
+    #[tokio::test]
+    async fn test_tool_spec_deserialization_default_preprocessor() {
+        let json_str = r#"{
+            "name": "test_tool",
+            "description": "A test tool",
+            "inputSchema": {"type": "object"}
+        }"#;
+
+        let deserialized: ToolSpec = serde_json::from_str(json_str).unwrap();
+
+        assert_eq!(deserialized.name, "test_tool");
+        assert_eq!(deserialized.description, "A test tool");
+        assert_eq!(deserialized.is_preprocessor, false);
+    }
+}
 #[derive(Debug, Default)]
 pub struct InvokeOutput {
     pub output: OutputKind,

@@ -1042,4 +1042,38 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn test_tool_specification_with_preprocessor() {
+        let tool_spec = ToolSpecification {
+            name: "test_tool".to_string(),
+            description: "A test tool".to_string(),
+            input_schema: ToolInputSchema {
+                json: Some(Document::Null),
+            },
+            is_preprocessor: true,
+        };
+
+        assert_eq!(tool_spec.name, "test_tool");
+        assert_eq!(tool_spec.description, "A test tool");
+        assert_eq!(tool_spec.is_preprocessor, true);
+    }
+
+    #[test]
+    fn test_tool_specification_conversion() {
+        let tool_spec = ToolSpecification {
+            name: "test_tool".to_string(),
+            description: "A test tool".to_string(),
+            input_schema: ToolInputSchema {
+                json: Some(Document::Null),
+            },
+            is_preprocessor: true,
+        };
+
+        let converted: amzn_codewhisperer_streaming_client::types::ToolSpecification = tool_spec.into();
+        
+        // The conversion should preserve the is_preprocessor field
+        assert_eq!(converted.name, "test_tool");
+        assert_eq!(converted.description, "A test tool");
+    }
 }
